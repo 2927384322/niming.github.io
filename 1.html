@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(匿名空间)首页</title>
+    <link rel="shortcut icon" href="./img/ico.jpg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            font-size: 16px;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 40px;
+            color: darkturquoise;
+            margin: 20px 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .img-d {
+            width: 300px;
+            background-color: transparent;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px #99CCFF;
+        }
+
+        .content {
+            flex-grow: 1;
+            position: relative;
+            margin-left: 20px;
+            background-color: transparent;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px #99FFFF;
+            overflow: hidden;
+            height: 400px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease;
+            width: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .play-button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        #lyrics {
+            margin-top: 20px;
+            font-size: 16px;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        .indicator {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            border-radius: 50%;
+            background-color: #bbb;
+            cursor: pointer;
+        }
+
+        .active {
+            background-color: #FFA500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            cursor: pointer;
+        }
+
+        /* 语言部分样式 */
+        .language-section {
+            margin: 20px 0;
+            padding: 20px;
+            color: #33CCFF;
+            background-color: transparent;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px #99FFFF;
+        }
+
+        #bg-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+        }
+
+        /* 调整切换按钮大小 */
+        .prev,
+        .next {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 10;
+            position: absolute;
+        }
+
+        .prev {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .next {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        /* 媒体查询部分，添加自适应 */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+                flex-direction: column;
+            }
+
+            .img-d {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .content {
+                width: 100%;
+                margin-left: 0;
+                height: auto;
+            }
+
+            .slides {
+                flex-direction: column;
+            }
+
+            .slide {
+                min-width: 100%;
+                height: auto;
+            }
+
+            .prev,
+            .next {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
+                left: 5px;
+                right: 5px;
+                top: auto;
+                bottom: 5px;
+                transform: translateY(0);
+            }
+
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+            }
+
+            .language-section {
+                margin: 10px 0;
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        /* 新增的样式：二维码图片 */
+        .qrcode-container {
+            text-align: center; /* 居中对齐 */
+            margin-top: 20px; /* 确保和上面有间距 */
+        }
+
+        .qrcode-container img {
+            width: 271px; /* 设置二维码图片的宽度 */
+            height: auto; /* 高度自适应 */
+        }
+    </style>
+</head>
+
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="./img/bak.mp4" type="video/mp4">
+        Sorry, your browser doesn't support the video tag.
+    </video>
+    <h3>全栈程序员网站</h3>
+
+    <!-- 自动播放音乐 -->
+    <audio id="audioPlayer" loop >
+        <source src="./img/与我无关.mp3" type="audio/mpeg">
+    </audio>
+    <audio autoplay loop>
+        <source src="./img/2r.mp3" type="audio/mpeg"><source>
+    </audio>
+    <!-- 图片展示区域 -->
+    <div class="container">
+        <div class="content">
+            <div class="slides" id="slides">
+                <div class="slide">
+                    <img src="./img/image1.jpg" style="background-color: transparent;" alt="图片1">
+                    <button class="prev" onclick="showPrevSlide()">&#10094;</button>
+                    <button class="next" onclick="showNextSlide()">&#10095;</button>
+                </div>
+                <div class="slide">
+                    <img src="./img/image2.jpg" style="background-color: transparent;" alt="图片2">
+                    <button class="prev" onclick="showPrevSlide()">&#10094;</button>
+                    <button class="next" onclick="showNextSlide()">&#10095;</button>
+                </div>
+                <div class="slide">
+                    <img src="./img/image3.jpg" style="background-color: transparent;" alt="图片3">
+                    <button class="prev" onclick="showPrevSlide()">&#10094;</button>
+                    <button class="next" onclick="showNextSlide()">&#10095;</button>
+                </div>
+                <div class="slide">
+                    <img src="./img/image4.jpg" style="background-color: transparent;" alt="图片4">
+                    <button class="prev" onclick="showPrevSlide()">&#10094;</button>
+                    <button class="next" onclick="showNextSlide()">&#10095;</button>
+                </div>
+            </div>
+            <div class="indicator">
+                <span class="dot active" onclick="setSlide(0)"></span>
+                <span class="dot" onclick="setSlide(1)"></span>
+                <span class="dot" onclick="setSlide(2)"></span>
+                <span class="dot" onclick="setSlide(3)"></span>
+            </div>
+            <button class="play-button" onclick="playAudio()">播放音乐</button>
+            <div id="lyrics"></div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>欢迎来到匿名网站</p>
+        </div>
+    </div>
+
+    <!-- 语言介绍部分 -->
+    <div class="language-section">
+        <h4>Python</h4>
+        <p><b>Python是一种高级、解释型的编程语言，以其简洁的语法和易读性著称。Python的语法接近自然语言，使得初学者能够快速上手。Python广泛应用于数据分析、Web开发、人工智能等领域，具有丰富的库和框架支持，如NumPy、Pandas、Django等‌</b></p>
+    </div>
+
+    <div class="language-section">
+        <h4>C语言</h4>
+        <p><b>C语言是一种面向过程的编程语言，具有底层的特性，能够直接操作硬件和内存。C语言简洁高效，常用于开发操作系统、嵌入式系统等对性能要求较高的场景.</b></p>
+    </div>
+
+    <div class="language-section">
+        <h4>C++</h4>
+        <p><b>C++是在C语言的基础上进行扩展和改进的编程语言，支持面向对象编程以及面向过程编程。C++广泛应用于游戏开发、桌面应用程序等领域，具有高性能和丰富的特性。</b></p>
+    </div>
+
+    <div class="language-section">
+        <h4>Web前端</h4>
+        <p><b>Web前端技术主要包括HTML、CSS和JavaScript。HTML用于构建网页的结构，CSS用于定义网页的样式，JavaScript用于实现网页的交互和动态效果。这些技术共同构成了现代Web开发的基础。</b></p>
+    </div>
+
+    <!-- 二维码图片部分 -->
+    <div class="qrcode-container">
+        <p style="margin-bottom: 30px; color: #66CCFF;">有问题请扫码添加并联系开发人员</p>
+        <img src="./img/lianxi.jpg" alt="联系方式">
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const slidesContainer = document.getElementById('slides');
+        const totalSlides = slidesContainer.children.length;
+        const audioPlayer = document.getElementById('audioPlayer');
+        const lyricsElement = document.getElementById('lyrics');
+
+        function playAudio() {
+            if (audioPlayer.paused) {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play().then(() => {
+                    fetchLyrics('./lyrics.lrc');
+                }).catch(function (error) {
+                    console.error('播放失败:', error);
+                });
+            } else {
+                audioPlayer.pause();
+            }
+        }
+
+        function showNextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlide();
+        }
+
+        function showPrevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlide();
+        }
+
+        function setSlide(index) {
+            currentIndex = index;
+            updateSlide();
+        }
+
+        function updateSlide() {
+            slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('active');
+                    dot.style.backgroundColor = '#FFA500';
+                } else {
+                    dot.classList.remove('active');
+                    dot.style.backgroundColor = '#bbb';
+                }
+            });
+        }
+
+        setInterval(showNextSlide, 3000);
+
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        modal.style.display = "block";
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('lyrics.lrc')
+                .then(response => response.text())
+                .then(lyricsText => {
+                    const lyricsLines = lyricsText.split('\n').map(line => line.replace(/^\d+\:\d+\.\d+/, ''));
+                    document.getElementById('lyrics').innerHTML = lyricsLines.join('<br>');
+                })
+                .catch(error => console.error('Error fetching lyrics:', error));
+        });
+    </script>
+</body>
+
+</html>

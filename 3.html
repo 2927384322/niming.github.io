@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(匿名空间)代码</title>
+    <link rel="shortcut icon" href="./img/ico.jpg" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            cursor: url('./img/cur.jpg'), auto; /* 自定义鼠标指针 */
+            background-color: #f0f0f0; /* 背景颜色 (可选) */
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 30px;
+            color: #008B8B;
+        }
+
+        hr {
+            width: 100%;
+            height: 60px;
+            border: none; /* 去掉默认的边框 */
+            background-color: #008B8B; /* 自定义分隔线颜色 */
+        }
+
+        .code1 {
+            display: flex; /* 使用 flexbox 排列子元素 */
+            flex-wrap: wrap; /* 允许换行 */
+            justify-content: center; /* 居中对齐 */
+            margin: 20px; /* 增加间距 */
+        }
+
+        ul {
+            list-style: none;
+            padding: 0; /* 去掉默认的内边距 */
+            margin: 0; /* 去掉默认的外边距 */
+            display: flex; /* 使用 flexbox 排列列表项 */
+        }
+
+        li {
+            font-size: 25px;
+            color: black;
+            font-family: '华文琥珀';
+            border: 1px solid #008B8B;
+            box-shadow: #008B8B 10px 10px 10px;
+            margin-right: 50px; /* 每个列表项之间右侧间隔50px */
+            padding: 10px; /* 增加内边距 */
+            transition: background-color 0.3s; /* 加入过渡效果 */
+        }
+
+        li:hover {
+            background-color: #008B8B; /* 鼠标悬停改变背景颜色 */
+            color: white; /* 鼠标悬停时改变字体颜色 */
+        }
+
+        li:last-child {
+            margin-right: 0; /* 最后一个列表项不需要右侧间隔 */
+        }
+
+        a {
+            text-decoration: none; /* 移除链接下划线 */
+            color: inherit; /* 继承父元素颜色 */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>项目代码</h1>
+    <hr>
+    <div class="code1">
+        <ul>
+            <li><a href="./3d/5.html">3D粒子传送门</a></li>
+            <li><a href="./3d/5.html">3D粒子传送门</a></li>
+            <li><a href="./3d/5.html">3D粒子传送门</a></li>
+            <li><a href="./3d/5.html">3D粒子传送门</a></li>
+            <li><a href="./3d/5.html">3D粒子传送门</a></li>
+        </ul>
+    </div>
+</body>
+
+</html>
